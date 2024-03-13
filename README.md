@@ -2,7 +2,7 @@
 
 ## Que Vamos a Ver Hoy
 
-...
+Como crear nuestro propio langchain
 
 ## Que no vamos a ver
 
@@ -291,15 +291,23 @@ Okay, so what is the response to my last comment? If using information obtained 
 
 Un `Chain` es un concepto fundamental sobre el que se basa LangChain.
 Básicamente, un `Chain` es la combinación de un `LLM` y un `prompt`.
+
 Para proporcionar un insumo para una cadena, reemplazamos una parte variable en el prompt.
 En esencia, tenemos algo similar a esto:
 Chain = LLM(GPT3.5) + Prompt
+
 El input de la cadena reemplaza una sección variable del prompt, generando así el
 prompt final que se alimentará al modelo de lenguaje.
 Por ejemplo, considera el siguiente prompt:
 Prompt: `Dame un nombre creativo para una tienda que se venda {{producto}}`
+
 La "cadena" se formaría con la combinación del LLM elegido, digamos GPT-3.5, y el prompt dado.
 Si el insumo del `Chain` es `medias`, el prompt final que se alimenta al LLM sería:
+
 Prompt final: `Dame un nombre creativo para una tienda que se venda medias`
 Y la salida del Chain sería la respuesta generada por el modelo de lenguaje a este
 prompt, que podría ser un nombre creativo para una tienda de medias.
+
+Ahora podríamos crear otra `Chain` que genere un eslogan:
+Indicador: `Dame un eslogan para una tienda con este nombre: {{nombre}}`
+Podemos encadenarlos de tal manera que la salida de la primera cadena sea la entrada de la siguiente, concatenando así las cadenas.
