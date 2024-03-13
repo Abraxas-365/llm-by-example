@@ -10,14 +10,17 @@ use tokio::io::{self, AsyncBufReadExt, BufReader};
 
 #[tokio::main]
 async fn main() {
+    let api_key = std::env::var("OPENAI_API_KEY").unwrap();
+    let db = std::env::var("DATABASE_URL").unwrap();
     //Inicializo el ebedder
-    let embedder = OpenAiEmbedder::default();
+    let embedder = OpenAiEmbedder::default().with_api_key(api_key);
+    //get OPENAI_API_KEY from environment
 
     //Inicializo el Vectore Store de postgres
     let store = StoreBuilder::new()
         .embedder(embedder)
         .pre_delete_collection(true)
-        .connection_url("postgresql://postgres:postgres@localhost:5432/postgres")
+        .connection_url(&db)
         .vector_dimensions(1536)
         .build()
         .await

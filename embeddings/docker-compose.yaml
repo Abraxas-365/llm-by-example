@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  db:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - mynet
+
+
+  rust-app:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db  
+    environment:  # Add your environment variables here
+          DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+          OPENAI_API_KEY: you_open_api_key
+    networks:
+      - mynet
+
+networks:
+  mynet:
