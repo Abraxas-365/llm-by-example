@@ -313,7 +313,8 @@ Indicador: `Dame un eslogan para una tienda con este nombre: {{nombre}}`
 Podemos encadenarlos de tal manera que la salida de la primera cadena sea la entrada de la siguiente, concatenando así las cadenas.
 
 Ejemplos:
-[Simple Chain](chains/simple_chain)
-[Sequential Chain](chains/sequential_chain)
+
+- [Simple Chain](chains/simple_chain)
+- [Sequential Chain](chains/sequential_chain)
 
 ### Agentes
