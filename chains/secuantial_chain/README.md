@@ -1,6 +1,6 @@
 Para inicializar
 
 ```bash
-docker build -t chain .
-docker run -it chain
+docker build -t sequential_chain .
+docker run -it sequential_chain
 ```
