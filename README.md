@@ -145,23 +145,144 @@ LangChain. Y hasta podríamos crear nuestro propio LangChain.
 
 ### Prompts
 
-## langchain
+Un "prompt" en el contexto de Modelos de Lenguaje de Gran Tamaño (LLMs) se refiere
+a la entrada de texto que se le proporciona al modelo para generar una respuesta o
+completar la entrada de texto dada. Estos prompts pueden ser desde una única palabra,
+hasta frases completas o incluso párrafos.
 
-- Prompting
-- Que es un chain
-  - Crear ejemplo de chains
-- Que es un Agente
-  - Crear un agente
-- Que son tools
+Usando los Prompts podemos usar los prompts para guiar la generación del texto del
+modelo en una dirección
+en base a los patrones de lenguaje que ha aprendido relacionados con los cuentos de hadas.
 
-  - Crear un tool
-  - Tool de internet
-  - tool de memoria con embeddings
+- Esta técnica es útil para:
 
-- Memoria
+  - Obtener respuestas específicas del modelo.
+  - Generar textos creativos como cuentos, poemas, canciones, etc.
+  - Obtener explicaciones de conceptos científicos, definiciones tecnológicas, etc.
+  - Generar texto en diferentes estilos y tonos.
+    Los prompts son una herramienta crucial para interactuar con los modelos de lenguaje y obtener el tipo de texto que necesitamos. Sin embargo, lo más difícil es construir un prompt que dé una respuesta útil. Como los modelos se entrenan en datos masivos, muestran una distribución amplia de posibles respuestas. A fin de cuentas, los modelos de lenguaje solo pueden generar texto basándose en lo que han visto en sus datos de entrenamiento y, aunque pueden producir información factual y lógicamente coherente, no pueden aplicar la comprensión común del mundo tal como los humanos. Por lo tanto, es esencial aprender a definir prompts precisos y efectivos para obtener los mejores resultados posibles del modelo.
 
-- Crear una applicacion
+- Tipos de Prompt basado en el modelo:
+  Actualmente hay 2 tipos prompt los 2 grandes tipos de "modelo"
+  - Completition Models
+  - Chat models
 
-## Conlucion
+#### Completition Models
 
-- Cuando usar y cuando no usare lagchain
+Los Modelos de Completación, como sugiere su nombre, están diseñados para completar
+un texto dado. Reciben una entrada de texto, conocida como "prompt", y generan una
+secuencia de texto que parece una continuación coherente y natural de la entrada.
+
+##### Ejemplo de un Modelo de Completación:
+
+Si proporcionamos al modelo el prompt `"En un mundo dominado por dragones..."`,
+una posible continuación generada por el modelo podría ser:
+`"...las humanidad ha tenido que adaptar su forma de vida para sobrevivir. Las ciudades están construidas en lo alto de montañas inaccesibles, lejos del alcance de los dragones, y los viajes entre ellas se realizan a través de una red de túneles subterráneos. La gente ha aprendido a utilizar la magia para camuflarse y proteger sus hogares de los dragones. A pesar de la amenaza constante, la humanidad ha encontrado maneras de coexistir con estas criaturas míticas, estudiándolas y aprendiendo de ellas. La existencia de los dragones ha dado lugar a una edad de valentía y descubrimiento, donde cada día presenta nuevos desafíos y oportunidades."
+Este apunte es aleatorio y solo sirve como ejemplo, la continuación de texto que generará el modelo puede variar cada vez que se realice la tarea con el mismo prompt.`
+
+Si desamos generar una conversacion con estos modelos el pormpt se veria asi:
+
+```
+user: Mi nombre es luis
+assistant: mi nombre es chatgpt
+user: Te gustan los dragones?
+assistant:
+```
+
+Tendriamos que decirle al modelo que se detenga al querer escribir `user`
+
+En OPEN AI los modelos que son de este tipo son los siguientes
+
+- babbage-002
+- davinci-002
+
+#### Chat Models
+
+Los Modelos de Chat están diseñados para generar una respuesta coherente basada en una serie de entradas de texto que representan un diálogo entre dos o más participantes. A diferencia de los Modelos de Completación, que simplemente generan una continuación del texto dado, los Modelos de Chat tienen en cuenta toda la conversación anterior para generar respuestas adecuadas.
+Estos modelos son particularmente útiles para aplicaciones de inteligencia artificial conversacional, como asistentes virtuales, chatbots de servicio al cliente, tutorías de aprendizaje automático, y más.
+
+##### Ejemplo de un Modelo de Chat:
+
+En los modelos de chat, la entrada ya sabe que es un usuario. Esto se alimenta en forma de una cadena de objetos JSON.
+Por ejemplo, si el usuario dice "Mi nombre es Luis", esto se representaría de la siguiente manera en formato JSON:
+
+```json
+[
+  {
+    "role": "user",
+    "content": "Mi nombre es Luis"
+  }
+]
+```
+
+En este caso, cada objeto JSON en la matriz representa un turno en la conversación.
+El campo "role" determina si el turno corresponde al usuario o al modelo de IA (generalmente
+etiquetado como "assistant", y el campo "content" contiene el texto de ese turno en la conversación.
+
+En OPEN AI los modelos que son de este tipo son los siguientes
+
+- gpt4
+- gpt3.5
+
+#### Ejemples Practicos
+
+Los "prompts" son la base de toda aplicación que hace uso de Modelos de Lenguaje de Gran Tamaño (LLMs). Aquí te proporciono un par de ejemplos sobre cómo se utilizan en contextos prácticos:
+Un ejemplo sencillo de un prompt puede ser para la generación de ideas creativas. Supongamos que necesitas nombres para una nueva marca de medias. Podrías utilizar un prompt como:
+`Genera nombres creativos para una marca de medias que se llama {{nombre}}"`
+Donde {{nombre}} puede ser sustituido por el nombre que estés considerando para la marca. El modelo entonces generará opciones creativas basadas en ese nombre.
+Por otro lado, un prompt más complejo se podría utilizar en configuraciones más específicas, como es el caso de los "Agentes". Aunque profundizaremos más sobre los "Agentes" más adelante, un ejemplo de un prompt avanzado podría ser solicitar al modelo que genere una respuesta de un Asistente Virtual en un contexto específico de atención al cliente.
+
+```rust
+pub const PREFIX: &str = r#"
+
+Assistant is designed to be able to assist with a wide range of tasks, from answering simple questions to providing in-depth explanations and discussions on a wide range of topics. As a language model, Assistant is able to generate human-like text based on the input it receives, allowing it to engage in natural-sounding conversations and provide responses that are coherent and relevant to the topic at hand.
+
+Assistant is constantly learning and improving, and its capabilities are constantly evolving. It is able to process and understand large amounts of text, and can use this knowledge to provide accurate and informative responses to a wide range of questions. Additionally, Assistant is able to generate its own text based on the input it receives, allowing it to engage in discussions and provide explanations and descriptions on a wide range of topics.
+
+Overall, Assistant is a powerful system that can help with a wide range of tasks and provide valuable insights and information on a wide range of topics. Whether you need help with a specific question or just want to have a conversation about a particular topic, Assistant is here to assist."#;
+
+pub const FORMAT_INSTRUCTIONS: &str = r#"RESPONSE FORMAT INSTRUCTIONS
+----------------------------
+
+When responding to me, please output a response in one of two formats:
+
+**Option 1:**
+Use this if you want the human to use a tool.
+Markdown code snippet formatted in the following schema:
+
+{
+    "action": string, \\ The action to take. Must be one of {{tool_names}}
+    "action_input": string \\ The input to the action
+}
+
+**Option #2:**
+Use this if you want to respond directly to the human. Markdown code snippet formatted in the following schema:
+
+{
+    "action": "Final Answer",
+    "action_input": string \\ You should put what you want to return to use here
+}
+
+
+pub const SUFFIX: &str = r#"TOOLS
+------
+Assistant can ask the user to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:
+
+{{tools}}
+
+{{format_instructions}}
+
+USER'S INPUT
+Here is the user's input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):
+
+{{input}}"#;
+
+pub const TEMPLATE_TOOL_RESPONSE: &str = r#"TOOL RESPONSE:
+---------------------
+{{observation}}
+
+USER'S INPUT
+--------------------
+
+Okay, so what is the response to my last comment? If using information obtained from the tools you must mention it explicitly without mentioning the tool names - I have forgotten all TOOL RESPONSES! Remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else."#;
+```
