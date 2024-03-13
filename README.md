@@ -133,6 +133,9 @@ personalizar y aprovechar al máximo los LLMs, permitiendo adaptar estos modelos
 una amplia gama de usos y aplicaciones. Sin embargo, es esencial tener en cuenta sus
 limitaciones y considerar su uso apropiado en función de los objetivos y tareas particulares.
 
+- Embedding example
+  [Embedding](embeddings/)
+
 ## Conceptos Basicos
 
 En esta sección, es clave entender bien las ideas que están jugando en el mundo de
