@@ -432,3 +432,7 @@ en forma de json, lo que nos va a permitir extraer el json y saber que accion to
    Con esta info y estos tools , puedo responder la pregunta.
 
 7. Si si, se genera la respunta con el Json de Final Answer, si no el ciclo se repite N veces.
+
+Ejemplo:
+
+- [Agente Con tool de Walfram](agents/agent_example)
