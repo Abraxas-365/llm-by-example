@@ -318,3 +318,117 @@ Ejemplos:
 - [Sequential Chain](chains/sequential_chain)
 
 ### Agentes
+
+Los agentes representan la unión de un Prompt, Chain(LLM) y Tools.
+
+Para continuar hablando de Agentes, debemos abordar el último concepto crucial que
+nos falta: las Tools.
+
+#### Tools
+
+Los Modelos de Lenguaje (LLMs) no tienen acceso al mundo exterior; están confinados
+a su propia biblioteca de conocimientos.
+
+Esto significa que, por ejemplo, si la biblioteca de un LLM sólo tiene acceso a datos
+hasta el año 2023, el modelo no podrá buscar por sí mismo información en internet
+más allá de esa fecha.
+
+El LLM no obtendrá conocimientos adicionales a menos que nosotros se los proporcionemos
+de forma explícita. No podrá conocer el clima de hoy, etc.
+
+En pocas palabras, una herramienta (Tool) es un envoltorio (wrapper) sobre alguna
+herramienta del exterior. Algunos de los tools más comunes que podemos encontrar son:
+
+- Acceso a internet
+- SQL
+- Similarity search en una base de datos de embeddings
+- Todo lo que puedas imaginar que tenga una API
+
+Ésta es una forma de extender las capacidades de los modelos de lenguaje, permitiéndoles
+interactuar con el mundo exterior y acceder a información y funcionalidades adicionales.
+
+¿Cómo logramos que el LLM sepa qué herramienta usar? Bueno, hace falta entender cierta
+información adicional acerca de las herramientas.
+
+Cada Tool debe tener los siguientes valores:
+
+- Nombre: el nombre de la herramienta
+- Descripción: una descripción de qué es la herramienta, y si es posible, debe incluir cómo es el input
+- Call: la función que se ejecutará cuando se llame a la herramienta
+
+Un ejemplo de pseudo codigo seria este:
+
+```
+struct WheatherTool{
+name: WhetherTool
+description: This tool give you the wheter of a country.
+func: fn get_wheater(country:string)->string{
+Una funcion que llame a un api que de el clima
+}
+}
+```
+
+#### Prompt
+
+Ahora que entendemos como son los tools, vamos a entender un poco como se ve el prompt
+de un agente.
+
+Un ejemplo simple que sea facil de visulisar seria algo asi
+
+---
+
+Assistant can ask the user to use tools to look up information that may be helpful
+in answering the users original question. The tools the human can use are:
+{{toolsNames}}
+
+RESPONSE FORMAT INSTRUCTIONS
+When responding to me, please output a response in one of two formats:
+
+**Option 1:**
+Use this if you want the human to use a tool.
+Markdown code snippet formatted in the following schema:
+
+```json
+{
+    "action": string, \\ The action to take. Must be one of {{toolNames}}
+    "action_input": string \\ The input to the action
+}
+```
+
+**Option #2:**
+Use this if you want to respond directly to the human. Markdown code snippet formatted in the following schema:
+
+```json
+{
+    "action": "Final Answer",
+    "action_input": string \\ You should put what you want to return to use here
+}
+
+```
+
+USER'S INPUT
+Here is the user's input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):
+
+{{input}}"#;
+
+---
+
+Si prestamos atencion nos daremos cuenta que hemos hecho que el LLM nos devulva una respuesta estructurada,
+en forma de json, lo que nos va a permitir extraer el json y saber que accion tomar , o cual es la reaspuesta final.
+
+#### Pasos que sigue un agente
+
+1. LLega un input
+
+2. Se le envia al LLM, el prompt completo, incluyendo los tools , el input.
+
+3. El LLM piensa: "Tengo algun tool que me sirva para responde la pregunta"
+
+4. Si si tiene un tool que le sirva, devuelve el json con el nombre del tool y el input de este.
+
+5. Con codigo extraemos ese json y ejecutamos el tool correspondiente, con el input que nos da el agente.
+
+6. Se envia al agente la respuesta del tool, el agente se hace la siguiente preguta:
+   Con esta info y estos tools , puedo responder la pregunta.
+
+7. Si si, se genera la respunta con el Json de Final Answer, si no el ciclo se repite N veces.
