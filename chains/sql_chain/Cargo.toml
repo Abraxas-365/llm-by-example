@@ -1,0 +1,16 @@
+[package]
+name = "sql_chain"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+langchain-rust = { version = "*", git = "https://github.com/Abraxas-365/langchain-rust", branch = "feature/prompt_builders", features = ["postgres"] }
+serde = { version = "1.0", features = ["derive"] }
+async-trait = "0.1.71"
+tokio = { version = "1", features = ["full"] }
+serde_json = "1.0"
+futures ="0.3"
+log = "0.4.19"
+pgvector = {version = "0.3.2", features = ["postgres", "sqlx"], optional = true }

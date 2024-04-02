@@ -1,13 +1,5 @@
 # Langchain
 
-## Que Vamos a Ver Hoy
-
-Como crear nuestro propio langchain
-
-## Que no vamos a ver
-
-...
-
 ## Que es Langchain
 
 LangChain es un framework de código abierto para el desarrollo de aplicaciones
@@ -436,3 +428,69 @@ en forma de json, lo que nos va a permitir extraer el json y saber que accion to
 Ejemplo:
 
 - [Agente Con tool de Walfram](agents/agent_example)
+
+#### Ventajas y Desventajas
+
+- Ventajas
+
+  - Puede comunicarse con el exterior
+  - No es estatico como los chains, puede escojer que herrmienta es mejor para la ocacion
+
+- Desventajas
+  - Es lento
+
+### Semantic Routing
+
+Semantic routing es una técnica que surge a partir del uso de embeddings para dirigir el flujo de conversaciones o solicitudes según su contenido semántico.
+Consiste en la creación de "Routers", donde cada router contiene frases que se convierten en embeddings. Estos routers se utilizan posteriormente para redirigir el input del usuario hacia una acción específica basándose en el contenido semántico de su entrada.
+Ejemplo:
+Si tienes un chatbot y deseas evitar que entable conversaciones sobre política, podrías crear un router de política con las siguientes frases:
+
+```rust
+let politica = [
+  "isn't politics the best thing ever",
+  "why don't you tell me about your political opinions",
+  "don't you just love the president",
+  "they're going to destroy this country!",
+  "they will save the country!",
+];
+```
+
+Este sería el pseudocódigo para redirigir el input del usuario evitando conversaciones sobre política:
+
+```rust
+let router_layer = create_router_for(politica);
+
+if router_layer.call(user_input) == "politica" {
+  return "Sorry, we can't talk about politics here.";
+}
+```
+
+Si el input del usuario se evalúa y coincide con el tema de política, el chatbot proporciona
+una respuesta estándar indicando que no puede hablar sobre ese tema.
+
+#### Dynamic Semantic Routing
+
+Dynamic Semantic Routing es una evolución del Semantic Routing que incorpora una mayor
+flexibilidad y adaptabilidad en el enrutamiento de las solicitudes del usuario según
+su contenido semántico.
+Esta técnica combina las capacidades de Semantic Routing con la generación dinámica
+de inputs para herramientas específicas, emulando de cierta manera la funcionalidad
+de los agentes. Así, el Dynamic Routing no solo selecciona el router adecuado en función
+del input del usuario, sino que también emplea un Large Language Model (LLM) para
+generar el input apropiado de una herramienta, basándose en la descripción de la misma
+y el input inicial del usuario.
+
+Funcionamiento:
+
+1. Detección Semántica: Al igual que en Semantic Routing, el sistema primero identifica
+   el tema o contexto del input del usuario empleando un conjunto predefinido de routers semánticos.
+
+2. Selección del Router: Una vez identificado el tema, el sistema selecciona el router
+   correspondiente, que determina las posibles herramientas o acciones a ejecutar.
+
+3. Generación Dinámica del Input: En vez de redirigir directamente a una acción estándar,
+   Dynamic Semantic Routing aprovecha un LLM para analizar el contexto del user input y la descripción de la herramienta seleccionada, generando dinámicamente un input personalizado para dicha herramienta.
+
+- Ventajas
+  - Es veloz
