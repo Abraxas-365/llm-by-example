@@ -1,14 +1,18 @@
+use langchain_rust::llm::openai::OpenAI;
 use langchain_rust::{
     chain::{options::ChainCallOptions, Chain, SQLDatabaseChain, SQLDatabaseChainBuilder},
-    llm::openai::OpenAI,
-    prompt_args,
     tools::{postgres::PostgreSQLEngine, SQLDatabaseBuilder},
 };
 
-use std::io::{self, Write}; // Include io Library for terminal input
+use std::{
+    env,
+    io::{self, Write},
+}; // Include io Library for terminal input
 
 #[tokio::main]
 async fn main() {
+    env::set_var("RUST_LOG", "debug");
+    env_logger::init();
     let options = ChainCallOptions::default();
     let llm = OpenAI::default();
 
