@@ -23,8 +23,8 @@ services:
     depends_on:
       - db  
     environment:  # Add your environment variables here
-          DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
-          OPENAI_API_KEY: you_open_api_key
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          OPENAI_API_KEY: <api_key>
     networks:
       - mynet
 
