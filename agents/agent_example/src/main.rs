@@ -1,12 +1,12 @@
 use std::{env, sync::Arc};
 
 use langchain_rust::{
-    agent::{AgentExecutor, ChatOutputParser, ConversationalAgentBuilder},
+    agent::{AgentExecutor, ConversationalAgentBuilder},
     chain::{options::ChainCallOptions, Chain},
     llm::openai::OpenAI,
     memory::SimpleMemory,
     prompt_args,
-    tools::Wolfram,
+    tools::{CommandExecutor, Wolfram},
 };
 
 use std::io::{self, Write}; // Include io Library for terminal input
@@ -18,9 +18,9 @@ async fn main() {
     let llm = OpenAI::default();
     let memory = SimpleMemory::new();
     let wolfram_tool = Wolfram::default();
+    let cli = CommandExecutor::default();
     let agent = ConversationalAgentBuilder::new()
-        .tools(vec![Arc::new(wolfram_tool)])
-        .output_parser(ChatOutputParser::new().into())
+        .tools(&[Arc::new(wolfram_tool)])
         .options(ChainCallOptions::new().with_max_tokens(1000))
         .build(llm)
         .unwrap();

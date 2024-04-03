@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-langchain-rust = "2.5.1"
+langchain-rust = "3.2.1"
 serde_json = "1.0.114"
 tokio = "1.36.0"
 env_logger = "0.8.3"
